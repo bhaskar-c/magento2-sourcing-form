@@ -17,7 +17,7 @@ class Sourcing extends \Magento\Framework\View\Element\Template
     // companymodule is given in routes.xml
     // controller_name is folder name inside controller folder
     // action is php file name inside above controller_name folder
-      return 'sourcing/index/index';
+      return 'sourcing';
     // here controller_name is index, action is booking
     }
     

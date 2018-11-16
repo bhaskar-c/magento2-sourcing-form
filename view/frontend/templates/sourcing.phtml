@@ -7,7 +7,7 @@
     <div class="column main">
       <div class="row">
         <div class="col-sm-12">
-          <form class="form contact" action="<?php echo $block->getFormAction() ?>" id="sourcing-form" method="post" data-hasrequired="* Required Fields" novalidate="novalidate">
+          <form class="form contact" action="<?php echo $block->getFormAction() ?>" id="sourcing-form" method="post" data-hasrequired="* Required Fields" novalidate="novalidate" enctype="multipart/form-data">
             <fieldset class="fieldset">
               <legend class="legend"><span>Complete Your RFQ - Tell suppliers what you need</span></legend>
               <br>
@@ -32,6 +32,16 @@
                   <textarea placeholder="Hi,&#10;I'm looking for products with the following specifications:" name="specification" id="specification" title="What’s on your mind?" class="input-text" cols="5" rows="3" data-validate="{required:true}" aria-required="true"></textarea>
                 </div>
               </div>
+              <div class="field specification required">
+                <div class="control">
+                  Add attachments: <input type="file" name="img" multiple>
+                </div>
+              </div>
+              
+              
+              
+              
+              
             </fieldset>
             <div class="actions-toolbar">
               <div class="primary">

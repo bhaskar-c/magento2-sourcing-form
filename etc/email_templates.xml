@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+       <template id="custom_mail_template" label=" Sourcing mail to admin" file="sourcing_email.html" type="html" module="Knowpapa_Sourcing" area="frontend"/>
+</config>
