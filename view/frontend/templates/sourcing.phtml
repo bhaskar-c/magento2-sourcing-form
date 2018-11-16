@@ -1,0 +1,75 @@
+<main id="maincontent" class="page-main">
+  <a id="contentarea" tabindex="-1"></a>
+  <div class="page messages">
+    <div data-placeholder="messages"></div>
+  </div>
+  <div class="columns">
+    <div class="column main">
+      <div class="row">
+        <div class="col-sm-12">
+          <form class="form contact" action="<?php echo $block->getFormAction() ?>" id="sourcing-form" method="post" data-hasrequired="* Required Fields" novalidate="novalidate">
+            <fieldset class="fieldset">
+              <legend class="legend"><span>Complete Your RFQ - Tell suppliers what you need</span></legend>
+              <br>
+              <div class="field note no-label">The more specific your information, the more accurately we can match your request to the right suppliers.</div>
+              <div class="field keywords required">
+                <div class="control">
+                  <input placeholder="keywords of products you are looking for" name="keywords" id="keywords" title="keywords" value="" class="input-text" data-validate="{required:true}" aria-required="true" type="text">
+                </div>
+              </div>
+              <div class="field quantity required">
+                <div class="control">
+                  <input placeholder="Quantity required (e.g 1000 pcs)" name="quantity" id="quantity" title="quantity" value="" class="input-text" type="text" data-validate="{required:true}">
+                </div>
+              </div>
+              <div class="field location required">
+                <div class="control">
+                  <input placeholder="Location of delivery (City, State)" name="location" id="location" title="location" value="" class="input-text" type="text" data-validate="{required:true}">
+                </div>
+              </div>
+              <div class="field specification required">
+                <div class="control">
+                  <textarea placeholder="Hi,&#10;I'm looking for products with the following specifications:" name="specification" id="specification" title="What’s on your mind?" class="input-text" cols="5" rows="3" data-validate="{required:true}" aria-required="true"></textarea>
+                </div>
+              </div>
+            </fieldset>
+            <div class="actions-toolbar">
+              <div class="primary">
+                <input name="hideit" id="hideit" value="" type="hidden">
+                <button id="sourcingsubmit" type="submit" title="Submit" class="action submit primary">
+                <span>Submit</span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      
+      
+      
+        <div class="col-sm-12">      
+        <p>Submit your request & our suppliers will quote you within 24 hours. </p>
+         <p>It's that simple, really. </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<script>
+require([
+    'jquery',
+    'mage/validation'
+], function($){
+
+    var dataForm = $('#sourcing-form');
+    var ignore = null;
+
+    dataForm.mage('validation', {
+        ignore: ignore ? ':hidden:not(' + ignore + ')' : ':hidden'
+    }).find('input:text').attr('autocomplete', 'off');
+
+    $('button#sourcingsubmit').click( function() { //can be replaced with any event
+        dataForm.validation('isValid'); //validates form and returns boolean
+    });
+});
+
+</script>
