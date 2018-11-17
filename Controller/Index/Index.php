@@ -59,7 +59,7 @@ class Index extends \Magento\Framework\App\Action\Action
           $this->messageManager->addErrorMessage($e->getMessage());
           $this->dataPersistor->set('sourcing_data', $this->getRequest()->getParams());
       } catch (\Exception $e) {
-          //echo($e);
+          echo($e);
           //$this->messageManager->addErrorMessage(__('An error occurred while processing your form. Please try again later.'));
           $this->dataPersistor->set('sourcing_data', $this->getRequest()->getParams());
       }
@@ -78,7 +78,7 @@ class Index extends \Magento\Framework\App\Action\Action
             'name' => $this->_escaper->escapeHtml($customerName),
             'email' => $this->_escaper->escapeHtml($customerEmail),
         ];
-        $transport = $this->_transportBuilder->setTemplateIdentifier('custom_mail_template')
+        $temptransport = $this->_transportBuilder->setTemplateIdentifier('custom_mail_template')
             ->setTemplateOptions(['area' => 'frontend', 'store' => $store])
             ->setTemplateVars(
                 [
@@ -94,10 +94,19 @@ class Index extends \Magento\Framework\App\Action\Action
                 ]
             )
             ->setFrom($sender)
-            ->addTo('bha100710@gmail.com', 'Bhaskar')
-            ->getTransport();
+            ->addTo('bha100710@gmail.com', 'Bhaskar');
+            
+            
+        $attachmentCount = $post['attachmentCount'];
+        for ($k = 1 ; $k <= $attachmentCount; $k++){ 
+          $fileFormName = 'sourcingFileAttachment'.$k;
+          $name = $_FILES[$fileFormName]['name'];
+          $file = $_FILES[$fileFormName];
+          $temptransport->addAttachment($file, $name);
+          }
+          ->getTransport();
         $transport->sendMessage();  
-        
+       
       
       }
     

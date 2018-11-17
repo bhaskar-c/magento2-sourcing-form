@@ -32,16 +32,15 @@
                   <textarea placeholder="Hi,&#10;I'm looking for products with the following specifications:" name="specification" id="specification" title="What’s on your mind?" class="input-text" cols="5" rows="3" data-validate="{required:true}" aria-required="true"></textarea>
                 </div>
               </div>
-              <div class="field specification required">
-                <div class="control">
-                  Add attachments: <input type="file" name="img" multiple>
+              <input type="hidden" value="" name="attachmentCount" />
+              <div class="field uploads">
+                <div id="filesContainer" class="control">
+                  <p><a id="add-file-upload">Add File Upload</a></p>           
+                  <div id="element-templates">
+                    <div class="templaterow">::FIELD2::: <input type="file" name="::FIELD3::"></div>
+                  </div>
                 </div>
               </div>
-              
-              
-              
-              
-              
             </fieldset>
             <div class="actions-toolbar">
               <div class="primary">
@@ -53,9 +52,6 @@
             </div>
           </form>
         </div>
-      
-      
-      
         <div class="col-sm-12">      
         <p>Submit your request & our suppliers will quote you within 24 hours. </p>
          <p>It's that simple, really. </p>
@@ -64,10 +60,19 @@
     </div>
   </div>
 </main>
+<style>
+  .templaterow {
+    display: none;
+    }
+    .newlyAdded{
+      margin:5px;
+      }
+  </style>
 <script>
 require([
     'jquery',
     'mage/validation'
+    
 ], function($){
 
     var dataForm = $('#sourcing-form');
@@ -81,5 +86,12 @@ require([
         dataForm.validation('isValid'); //validates form and returns boolean
     });
 });
+</script>
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Knowpapa_Sourcing/js/sourcing": {}
+        }
+    }
 
 </script>
