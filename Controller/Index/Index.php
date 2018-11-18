@@ -54,7 +54,7 @@ class Index extends \Magento\Framework\App\Action\Action {
         }
       $post = (array) $this->getRequest()->getPost();  
       if (!empty($post)) {
-        $this->messageManager->addSuccessMessage(__('Thanks for requesting a quote. We\'ll get back to you very soon.'));
+        
         try {
             $customerId = $this->sessionFactory->getCustomer()->getId();  
             $customerName = $this->sessionFactory->getCustomer()->getName() ?? 'Customer';
@@ -62,9 +62,9 @@ class Index extends \Magento\Framework\App\Action\Action {
             $attachmentCount = $post['attachmentCount'];
             $this->uploadAllFiles($attachmentCount);
             //$this->sendMail($post, $customerId,$customerEmail, $customerName,$attachmentCount);
+            //$this->messageManager->addSuccessMessage(__('Thanks for requesting a quote. We\'ll get back to you very soon.'));
         } catch (LocalizedException $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
-            $this->dataPersistor->set('sourcing_data', $this->getRequest()->getParams());
         } catch (\Exception $e) {
             echo($e);
             $this->messageManager->addErrorMessage(__('An error occurred while processing your form. Please try again later.'));
@@ -77,9 +77,11 @@ class Index extends \Magento\Framework\App\Action\Action {
   }
     
     private function uploadAllFiles($attachmentCount){
+      //https://secure.php.net/manual/en/features.file-upload.post-method.php
       for ($k = 1 ; $k <= $attachmentCount; $k++){ 
           $fileFormName = 'sourcingFileAttachment'.$k;
           $name = $_FILES[$fileFormName]['name'];
+          $tmpName = $_FILES[$fileFormName]['tmp_name'];
           $file = $_FILES[$fileFormName];
           $path = pathinfo($name);
           $filename = $path['filename'];
@@ -91,35 +93,19 @@ class Index extends \Magento\Framework\App\Action\Action {
           //echo($ext); // 'pdf'
           //echo('****************\n\r');
           //die;
-          $this->uploadSingleFile($name, $file, $path);
+          $this->uploadSingleFile($name, $file, $path, $tmpName);
         }
      }       
             
-    private function uploadSingleFile($name, $file, $path){
-      $file['tmp_name'] = 'xxx';
-      if (isset($name) && $name != "") {
-         $destinationPath = $this->getDestinationPath();
-         //$media = $this->fileSystem->getDirectoryWrite($this->directoryList::MEDIA);
-         //$media->writeFile($name, $path);
-         try {
-            $uploader = $this->uploaderFactory->create(['fileId' => $path])
-                          ->setAllowCreateFolders(true)
-                          ->setAllowRenameFiles(true)
-                          ->setAllowedExtensions($this->allowedExtensions)
-                          ->setFilesDispersion(true);
-            $fileData = $uploader->save($destinationPath);    
-            if (!$fileData) {
-              throw new LocalizedException(__('File cannot be saved to path: $1', $destinationPath) );
-            }
-            $fileName = $fileData['file'];
-          } 
-          catch (\Exception $e) {
-            $message = $this->messageManager->addError(__($e->getMessage()));
-          }
-
-         
-         
-      }      
+    private function uploadSingleFile($name, $file, $path, $tmpName){
+      $uploaddir = '/var/www/html/pub/media/sourcing';
+      $uploadfile = $uploaddir . basename($name);
+      $result = move_uploaded_file($tmpName, $uploadfile);
+      if ($result) {
+          $this->messageManager->addSuccessMessage(__("File is valid, and was successfully uploaded.\n"));
+      } else {
+        $this->messageManager->addErrorMessage(__("Possible file upload attack!\n"));
+      }
     }
     
             
