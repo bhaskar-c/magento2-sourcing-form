@@ -1,13 +1,6 @@
-<main id="maincontent" class="page-main">
-  <a id="contentarea" tabindex="-1"></a>
-  <div class="page messages">
-    <div data-placeholder="messages"></div>
-  </div>
-  <div class="columns">
-    <div class="column main">
       <div class="row">
         <div class="col-sm-12">
-          <form class="form contact" action="<?php echo $block->getFormAction() ?>" id="sourcing-form" method="post" data-hasrequired="* Required Fields" novalidate="novalidate" enctype="multipart/form-data">
+          <form class="form contact" action="<?php echo $block->getFormAction() ?>" id="sourcing-form" method="post" data-hasrequired="* Required Fields"  novalidate="novalidate" enctype="multipart/form-data">
             <fieldset class="fieldset">
               <legend class="legend"><span>Complete Your RFQ - Tell suppliers what you need</span></legend>
               <br>
@@ -35,31 +28,28 @@
               <input type="hidden" value="" name="attachmentCount" />
               <div class="field uploads">
                 <div id="filesContainer" class="control">
+                  <p id="inValidExtensionError" style="display:none; color:#FF0000;">Invalid file extension. Allowed extensions: .jpg, .jpeg, .png, .pdf </p>
                   <p><a id="add-file-upload">Add File Upload</a></p>           
                   <div id="element-templates">
-                    <div class="templaterow">::FIELD2::: <input type="file" name="::FIELD3::"></div>
+                    <div class="templaterow">::FIELD2::: <input type="file" name="::FIELD3::"  data-validate="{validate-fileextensions:true}"></div>
                   </div>
                 </div>
               </div>
             </fieldset>
             <div class="actions-toolbar">
               <div class="primary">
-                <input name="hideit" id="hideit" value="" type="hidden">
-                <button id="sourcingsubmit" type="submit" title="Submit" class="action submit primary">
+                <button id="sourcingsubmit" type="submit" title="Submit" class="action submit primary" >
                 <span>Submit</span>
                 </button>
               </div>
             </div>
           </form>
         </div>
-        <div class="col-sm-12">      
-        <p>Submit your request & our suppliers will quote you within 24 hours. </p>
-         <p>It's that simple, really. </p>
+        <div class="col-sm-12"> 
+        <img src='<?php echo $this->getViewFileUrl('Knowpapa_Sourcing::images/sourcing.png'); ?>' alt="image-icon" width="403" height="484" class="responsive">
+        
         </div>
       </div>
-    </div>
-  </div>
-</main>
 <style>
   .templaterow {
     display: none;
