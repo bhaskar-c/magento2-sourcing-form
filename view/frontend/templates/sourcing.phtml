@@ -1,4 +1,8 @@
       <div class="row">
+        <div class="col-sm-12 sourcing-banner"> 
+        <img src='<?php echo $this->getViewFileUrl('Knowpapa_Sourcing::images/sourcing.png'); ?>' alt="image-icon" width="403" height="484" class="responsive">
+        
+        </div>
         <div class="col-sm-12">
           <form class="form contact" action="<?php echo $block->getFormAction() ?>" id="sourcing-form" method="post" data-hasrequired="* Required Fields"  novalidate="novalidate" enctype="multipart/form-data">
             <fieldset class="fieldset">
@@ -29,10 +33,11 @@
               <div class="field uploads">
                 <div id="filesContainer" class="control">
                   <p id="inValidExtensionError" style="display:none; color:#FF0000;">Invalid file extension. Allowed extensions: .jpg, .jpeg, .png, .pdf </p>
-                  <p><a id="add-file-upload">Add File Upload</a></p>           
                   <div id="element-templates">
                     <div class="templaterow">::FIELD2::: <input type="file" name="::FIELD3::"  data-validate="{validate-fileextensions:true}"></div>
                   </div>
+                  <p><a id="add-file-upload" class="add-file-upload">add new attachment</a><span class="small">allowed files: .jpg, .jpeg, .png, .pdf, .docx </span></p>
+                  
                 </div>
               </div>
             </fieldset>
@@ -45,18 +50,36 @@
             </div>
           </form>
         </div>
-        <div class="col-sm-12"> 
-        <img src='<?php echo $this->getViewFileUrl('Knowpapa_Sourcing::images/sourcing.png'); ?>' alt="image-icon" width="403" height="484" class="responsive">
-        
-        </div>
       </div>
 <style>
+  .small{
+    font-size: 80%;
+    color: #6e6e6e;
+    }
   .templaterow {
     display: none;
     }
     .newlyAdded{
       margin:5px;
       }
+    .sourcing-banner{
+      padding: 30px;
+      margin: 15px auto;
+      }  
+      .add-file-upload:before {
+      display: inline-block;
+      font-family: FontAwesome;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 1;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      content: "\f055";
+      font-size: 16px;
+      padding: 0 5px;
+      color: #c2185b;
+}
+      
   </style>
 <script>
 require([

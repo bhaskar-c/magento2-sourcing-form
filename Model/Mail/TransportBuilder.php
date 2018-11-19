@@ -16,15 +16,16 @@ class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
     /**
      * @param Api\AttachmentInterface $attachment
      */
-    public function addAttachment($file)
-    {
-        $at = $this->message->createAttachment($file);
-        $at->type        = 'image/jpeg';
-        $at->disposition = \Zend_Mime::DISPOSITION_ATTACHMENT; // or 
-        //$at->encoding    = \Zend_Mime::ENCODING_BASE64;
-        $at->filename    = 'test.pdf';
-       return $this;
-
+    public function addAttachment(
+        $body,
+        $filename,
+        $mimeType,
+        $disposition = \Zend_Mime::MULTIPART_MIXED,
+        $encoding    = \Zend_Mime::ENCODING_BASE64
+    ) {
+        $this->message->createAttachment($body, $mimeType, $disposition, $encoding, $filename);
+        $this->hasAttachments= 'true' ;
+        return $this;
     }
 
 }

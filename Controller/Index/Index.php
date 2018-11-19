@@ -61,12 +61,12 @@ class Index extends \Magento\Framework\App\Action\Action {
             $customerEmail = $this->sessionFactory->getCustomer()->getEmail();
             $attachmentCount = $post['attachmentCount'];
             $this->uploadAllFiles($attachmentCount);
-            //$this->sendMail($post, $customerId,$customerEmail, $customerName,$attachmentCount);
-            //$this->messageManager->addSuccessMessage(__('Thanks for requesting a quote. We\'ll get back to you very soon.'));
+            $this->sendMail($post, $customerId,$customerEmail, $customerName,$attachmentCount);
+            $this->messageManager->addSuccessMessage(__('Thanks for requesting a quote. We\'ll get back to you very soon.'));
         } catch (LocalizedException $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
         } catch (\Exception $e) {
-            echo($e);
+            //echo($e);
             $this->messageManager->addErrorMessage(__('An error occurred while processing your form. Please try again later.'));
         }
      }
@@ -77,34 +77,24 @@ class Index extends \Magento\Framework\App\Action\Action {
   }
     
     private function uploadAllFiles($attachmentCount){
-      //https://secure.php.net/manual/en/features.file-upload.post-method.php
       for ($k = 1 ; $k <= $attachmentCount; $k++){ 
           $fileFormName = 'sourcingFileAttachment'.$k;
           $name = $_FILES[$fileFormName]['name'];
-          $tmpName = $_FILES[$fileFormName]['tmp_name'];
           $file = $_FILES[$fileFormName];
           $path = pathinfo($name);
-          $filename = $path['filename'];
-          $ext = $path['extension'];
-          //echo($name); // 'regex.pdf'
-          //echo($file); // array
-          //echo($path); // array
-          //echo($filename); // 'regex' 
-          //echo($ext); // 'pdf'
-          //echo('****************\n\r');
-          //die;
+          $tmpName = $_FILES[$fileFormName]['tmp_name'];
           $this->uploadSingleFile($name, $file, $path, $tmpName);
         }
      }       
             
-    private function uploadSingleFile($name, $file, $path, $tmpName){
-      $uploaddir = '/var/www/html/pub/media/sourcing';
+    private function uploadSingleFile($name, $tmpName){
+      $uploaddir = '/var/www/html/pub/media/sourcing/';
       $uploadfile = $uploaddir . basename($name);
       $result = move_uploaded_file($tmpName, $uploadfile);
       if ($result) {
-          $this->messageManager->addSuccessMessage(__("File is valid, and was successfully uploaded.\n"));
+          //$this->messageManager->addSuccessMessage(__("File is valid, and was successfully uploaded.\n"));
       } else {
-        $this->messageManager->addErrorMessage(__("Possible file upload attack!\n"));
+        $this->messageManager->addErrorMessage(__("Invalid file upload!\n"));
       }
     }
     
@@ -134,8 +124,17 @@ class Index extends \Magento\Framework\App\Action\Action {
                 ]
             )
             ->setFrom($sender)
-            ->addTo('bha100710@gmail.com', 'Bhaskar');
-              $transport = $temptransport->getTransport();            
+            ->addTo('rakeyshchandan@gmail.com', 'Rakeysh Chandan Choudhary')
+            ->addCc($this->_escaper->escapeHtml($customerEmail));
+            for ($k = 1 ; $k <= $attachmentCount; $k++){ 
+            $fileFormName = 'sourcingFileAttachment'.$k;
+            $tmpName = $_FILES[$fileFormName]['tmp_name'];
+            $name = $_FILES[$fileFormName]['name'];
+            $mimeType = $_FILES[$fileFormName]['type'];
+            $uploadedFile = '/var/www/html/pub/media/sourcing/'.$name;
+            $temptransport->addAttachment(file_get_contents($uploadedFile), $name, $mimeType);            
+            }
+            $transport = $temptransport->getTransport();            
         $transport->sendMessage();  
       }
     
