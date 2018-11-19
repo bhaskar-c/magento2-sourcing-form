@@ -79,11 +79,11 @@ class Index extends \Magento\Framework\App\Action\Action {
     private function uploadAllFiles($attachmentCount){
       for ($k = 1 ; $k <= $attachmentCount; $k++){ 
           $fileFormName = 'sourcingFileAttachment'.$k;
+          if($_FILES[$fileFormName]["error"] != 4) {
           $name = $_FILES[$fileFormName]['name'];
-          $file = $_FILES[$fileFormName];
-          $path = pathinfo($name);
           $tmpName = $_FILES[$fileFormName]['tmp_name'];
-          $this->uploadSingleFile($name, $file, $path, $tmpName);
+          $this->uploadSingleFile($name, $tmpName);
+          }
         }
      }       
             
@@ -91,23 +91,14 @@ class Index extends \Magento\Framework\App\Action\Action {
       $uploaddir = '/var/www/html/pub/media/sourcing/';
       $uploadfile = $uploaddir . basename($name);
       $result = move_uploaded_file($tmpName, $uploadfile);
-      if ($result) {
-          //$this->messageManager->addSuccessMessage(__("File is valid, and was successfully uploaded.\n"));
-      } else {
-        $this->messageManager->addErrorMessage(__("Invalid file upload!\n"));
-      }
+      //if ($result) {} else {}
     }
     
-            
-    private function getDestinationPath(){return $this->fileSystem->getDirectoryWrite(DirectoryList::MEDIA)->getAbsolutePath('sourcing'); }        
             
     private function sendMail($post, $customerId, $customerEmail, $customerName, $attachmentCount){
         $store = $this->_storeManager->getStore()->getId();
         $post = (array) $this->getRequest()->getPost();
-        $sender = [
-            'name' => $this->_escaper->escapeHtml($customerName),
-            'email' => $this->_escaper->escapeHtml($customerEmail),
-        ];
+        $sender = [ 'name' => 'HCX Sourcing', 'email' => 'admin@hcx.global'];
         $temptransport = $this->_transportBuilder->setTemplateIdentifier('custom_mail_template')
             ->setTemplateOptions(['area' => 'frontend', 'store' => $store])
             ->setTemplateVars(
@@ -116,27 +107,26 @@ class Index extends \Magento\Framework\App\Action\Action {
                     'customeId' => $customerId,
                     'customeName' => $customerName,
                     'store' => $this->_storeManager->getStore(),
-                    'keywords'    => $post['keywords'],
-                    'quantity'    => $post['quantity'],
-                    'location'    =>$post['location'],
-                    'specification' => $post['specification']
-                    
+                    'keywords'    => $this->_escaper->escapeHtml($post['keywords']),
+                    'quantity'    => $this->_escaper->escapeHtml($post['quantity']),
+                    'location'    => $this->_escaper->escapeHtml($post['location']),
+                    'specification' => $this->_escaper->escapeHtml($post['specification'])
                 ]
             )
             ->setFrom($sender)
-            ->addTo('rakeyshchandan@gmail.com', 'Rakeysh Chandan Choudhary')
-            ->addCc($this->_escaper->escapeHtml($customerEmail));
+            ->addTo('rakeyshchandan@gmail.com', 'Bhaskar Chaudhary');
+            //->addCc($customerEmail,$customerName );
             for ($k = 1 ; $k <= $attachmentCount; $k++){ 
-            $fileFormName = 'sourcingFileAttachment'.$k;
-            $tmpName = $_FILES[$fileFormName]['tmp_name'];
-            $name = $_FILES[$fileFormName]['name'];
-            $mimeType = $_FILES[$fileFormName]['type'];
-            $uploadedFile = '/var/www/html/pub/media/sourcing/'.$name;
-            $temptransport->addAttachment(file_get_contents($uploadedFile), $name, $mimeType);            
+              $fileFormName = 'sourcingFileAttachment'.$k;
+              if($_FILES[$fileFormName]["error"] != 4) {
+                  $name = $_FILES[$fileFormName]['name'];  
+                  $mimeType = $_FILES[$fileFormName]['type'];
+                  $uploadedFile = '/var/www/html/pub/media/sourcing/'.$name;
+                  $temptransport->addAttachment(file_get_contents($uploadedFile), $name, $mimeType); 
+               }           
             }
-            $transport = $temptransport->getTransport();            
+        $transport = $temptransport->getTransport();            
         $transport->sendMessage();  
       }
-    
     
 } 
